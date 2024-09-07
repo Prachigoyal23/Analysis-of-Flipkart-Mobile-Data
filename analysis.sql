@@ -1,13 +1,16 @@
+-- Number of brands in the segment
 SELECT COUNT(Brand_Name) AS Number_of_Brands
 FROM `database`.`flipkart-data`;
 
 
+-- Count of SKUs per brand
 SELECT Brand_Name, COUNT(*) AS SKU_Count
 FROM `database`.`flipkart-data`
 GROUP BY Brand_Name
 ORDER BY SKU_Count DESC;  -- Optional: You can order by SKU_Count descending if you want to see which brand has the most SKUs
 
 
+-- Relative ranking: Create a formula to rank brands based on the rank of the SKUs in the search results.
 	WITH SKU_Rank AS (
     SELECT Brand_Name, Ranking,
            ROW_NUMBER() OVER (PARTITION BY Brand_Name ORDER BY Ranking ASC) AS SKU_Rank
@@ -22,6 +25,7 @@ GROUP BY Brand_Name
 ORDER BY Total_Rank_Score ASC;  -- Adjust the ORDER BY as per your ranking criteria
 
 
+-- Relative rating: Use same logic as above to calculate the relative rating (not count) of a brand.
 WITH SKU_Rating AS (
     SELECT Brand_Name, Rating,
            ROW_NUMBER() OVER (PARTITION BY Brand_Name ORDER BY Rating ASC) AS SKU_Rating
@@ -37,6 +41,7 @@ ORDER BY Total_Rating_Score ASC;
 
 
 
+-- Price distribution of SKUs
 SELECT 
     Price_Band,
     COUNT(*) AS SKU_Count
